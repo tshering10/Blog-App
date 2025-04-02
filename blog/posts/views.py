@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from posts.models import Post
-from posts.forms import PostForm
+from posts.forms import PostForm, CommentForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     posts = Post.objects.all().order_by('-pk')
@@ -28,7 +29,25 @@ def user_post_view(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'posts/details.html', {'post': post})
+    comments = post.comments.all()
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            messages.success(request, "Comment added successfully!")
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
+    context = {
+        'form': form,
+        'post': post,
+        'comments': comments
+    }
+    return render(request, 'posts/details.html', context)
 
 def create_post(request):
     if request.method == "POST":
@@ -61,3 +80,19 @@ def delete_post_view(request, pk):
     post.delete()
     messages.success(request, "Your post deleted!!") 
     return redirect("user_post_view") #redirect to my post section after delete
+
+# @login_required
+# def add_comment_view(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     if request.method == 'POST':
+#         form = CommentForm(request.POST)
+#         if form.is_valid():
+#             comment = form.save(commit=False)
+#             comment.author = request.user
+#             comment.post = post
+#             comment.save()
+#             messages.success(request, "Comment added successfully!")
+#             return redirect('post_detail', pk=post.pk)
+#     else:
+#         form = CommentForm()
+#     return render(request, 'posts/details.html', {'form': form, 'post': post})
