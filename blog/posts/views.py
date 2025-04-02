@@ -16,8 +16,7 @@ def home(request):
     return render(request, 'posts/home.html', {'posts': posts, 'page_obj': page_obj})
 
 def dashboard(request):
-    posts = Post.objects.all().order_by('-pk') 
-     
+    posts = Post.objects.all().order_by('-pk')   
     context = {
         'posts': posts,        
     }
@@ -43,4 +42,22 @@ def create_post(request):
     else:
         form = PostForm()
     return render(request, 'posts/create.html', {'form': form})
-        
+
+def update_post(request, pk):
+    post = get_object_or_404(Post, pk=pk) #fetching data to update
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your post updated successfully!!")
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = PostForm(instance=post)
+    return render(request, "posts/edit.html", {'form': form})
+    
+def delete_post_view(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    messages.success(request, "Your post deleted!!") 
+    return redirect("user_post_view") #redirect to my post section after delete

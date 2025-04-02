@@ -2,8 +2,20 @@
 {% block title %}{{post.title}}{% endblock title %}
 {% block content %}
 
-<div class="posts">
+<div class="detail-post">
     <h5>{{post.title}}</h5>
     <p>{{post.content}}</p>
+    {% if request.user == post.author %}
+    <div class="edit-delete-container">
+        <a href="{% url "edit_post" post.pk%}" class="btn btn-success">Edit</a>
+        <a href="{% url "delete_post" post.pk%}" class="btn btn-danger">Delete</a>   
+    </div>
+    {% endif %}
+    <hr>
+    <div>
+        <p>Created at:{{post.created_at }}</p>
+        <p>Updated at:{{post.updated_at }}</p>
+    </div>
 </div>
+
 {% endblock content %}
