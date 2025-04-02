@@ -2,18 +2,19 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from members.forms import CustomRegisterForm
 from django.urls import reverse_lazy
 
 
 def signup_view(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "You have successfully registered! Please log in.")
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = CustomRegisterForm()
     return render(request, "registration/register.html", {'form': form})
 
 
