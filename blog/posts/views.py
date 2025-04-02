@@ -2,13 +2,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from posts.models import Post
 from posts.forms import PostForm
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage
 # Create your views here.
 def home(request):
     posts = Post.objects.all().order_by('-pk')
-    return render(request, 'posts/home.html', {'posts': posts})
+    paginator = Paginator(posts, 2) #shows 2 posts per page
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(1)
+        
+    return render(request, 'posts/home.html', {'posts': posts, 'page_obj': page_obj})
 
 def dashboard(request):
-    posts = Post.objects.all().order_by('-pk')  
+    posts = Post.objects.all().order_by('-pk') 
+     
     context = {
         'posts': posts,        
     }

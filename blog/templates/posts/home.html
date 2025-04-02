@@ -5,8 +5,8 @@
     <div class="container-post">
         <h4>Latest Talks</h4>
         
-        {% if posts %}
-            {% for post in posts %}
+        {% if page_obj %}
+            {% for post in page_obj %}
                 <div class="posts">
                     <a class="text-decoration-none text-dark" href="{% url "post_detail" post.pk%}"><strong >{{post.title}}| {{post.author.username}}</strong></a>
                     <p>{{post.content|slice:":30"}}... <a href="{% url "post_detail" post.pk %}">Read More</a></p>
@@ -15,4 +15,18 @@
             {% endfor %}
         {% endif %}
     </div>
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a class="pagination-button" href="?page=1">&laquo; First</a>
+            <a class="pagination-button" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+    
+        <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a class="pagination-button" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="pagination-button" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+    </div>
+    
 {% endblock content %}
