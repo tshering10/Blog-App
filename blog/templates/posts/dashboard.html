@@ -1,0 +1,42 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+    <h1>Welcome {{ user.username }}</h1>
+    
+    <div class="container-post">
+        <h4>All Posts</h4>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="posts">
+                    <a class="text-decoration-none text-dark" href="{% url 'post_detail' post.pk %}">
+                        <strong>{{ post.title }} | {{ post.author.username }}</strong>
+                    </a>
+                    <p>{{ post.content|slice:":30" }}... <a href="{% url 'post_detail' post.pk %}">Read More</a></p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <div class="my-posts">
+        <h4>My Posts</h4>
+        {% if request.user.is_authenticated %}
+            {% if userPosts %}
+                {% for post in userPosts %}
+                    <div class="posts">
+                        <a class="text-decoration-none text-dark" href="{% url 'post_detail' post.pk %}">
+                            <strong>{{ post.title }} | {{ post.author.username }}</strong>
+                        </a>
+                        <p>{{ post.content|slice:":30" }}... <a href="{% url 'post_detail' post.pk %}">Read More</a></p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You haven't created any posts yet.</p>
+            {% endif %}
+        {% else %}
+            <p>You must be logged in to view your posts.</p>
+        {% endif %}
+    </div>
+    
+{% endblock content %}
