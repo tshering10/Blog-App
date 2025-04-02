@@ -5,6 +5,12 @@
         <div class="post-header">
             <h5>{{ post.title }}</h5>
             <p>{{ post.content }}</p>
+
+            <form action="{% url "like_post" post.pk %}" method='post'>
+                {% csrf_token %}
+                <button type='submit'><i class="fa-regular fa-thumbs-up"></i></button> {{ post.likes.count }} likes
+                
+            </form>
         </div>
 
         <!-- Edit/Delete buttons for real author -->
@@ -38,12 +44,13 @@
         </div>
 
         <!-- Comment Form -->
+         <span>{{ comments.count }}</span> Comments
         <div class="comment-form">
             <h6>Add a comment:</h6>
                 <form method="post" action="{% url 'post_detail' post.pk %}">
                     {% csrf_token %}
                         <div class="form-group">
-                            <label for="{{ form.content.id_for_label }}">Your Comment</label>
+                            <label for="{{ form.content.id_for_label }}"></label>
                             {{ form.content }}
                         </div>
                     

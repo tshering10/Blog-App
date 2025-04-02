@@ -21,3 +21,12 @@ class Comment(models.Model):
     
     def __str__(self):
         return f"Comment by: {self.author.username} on {self.post.author.username}'s post"
+    
+class Like(models.Model):
+    post = models.ForeignKey(Post, related_name="likes", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="like_post", on_delete=models.CASCADE)
+    liked_time = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.author.username} likes {self.post.title}"
+    
