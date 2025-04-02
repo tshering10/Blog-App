@@ -8,13 +8,15 @@ def home(request):
     return render(request, 'posts/home.html', {'posts': posts})
 
 def dashboard(request):
-    posts = Post.objects.all().order_by('-pk')
-    userPosts = Post.objects.filter(author = request.user).order_by('-pk')
+    posts = Post.objects.all().order_by('-pk')  
     context = {
-        'posts': posts,
-        'userPosts': userPosts,        
+        'posts': posts,        
     }
     return render(request, 'posts/dashboard.html', context)
+
+def user_post_view(request):
+    userPosts = Post.objects.filter(author = request.user).order_by('-pk')
+    return render(request, 'posts/user-dashboard.html',{'userPosts': userPosts})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
