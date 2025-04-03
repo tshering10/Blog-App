@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     posts = Post.objects.all().order_by('-pk')
-    paginator = Paginator(posts, 2) #shows 2 posts per page
+    paginator = Paginator(posts, 5) #shows 5 posts per page
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)

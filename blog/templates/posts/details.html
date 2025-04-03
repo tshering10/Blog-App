@@ -1,52 +1,55 @@
 {% extends 'posts/base.html' %}
 {% block title %}{{ post.title }}{% endblock title %}
 {% block content %}
-    <div class="detail-post">
-        <div class="post-header">
-            <h5>{{ post.title }}</h5>
-            <p>{{ post.content }}</p>
-
-            <form action="{% url "like_post" post.pk %}" method='post'>
+    <div class="container mt-5 border rounded p-3">
+        <div class="post-header mb-4">
+            <h5 class="display-6">{{ post.author.username }}:</h5>
+            <p class="ms-5">{{ post.content }}</p>
+            <hr>
+            <form action="{% url "like_post" post.pk %}" method='post' class="like-button">
                 {% csrf_token %}
-                <button type='submit'><i class="fa-regular fa-thumbs-up"></i></button> {{ post.likes.count }} likes
-                
+                <button type='submit' class="border-none"><i class="fa-regular fa-thumbs-up like-icon"></i></button>
+                <span class="ms-2">{{ post.likes.count }} likes </span>   
             </form>
         </div>
 
         <!-- Edit/Delete buttons for real author -->
         {% if request.user == post.author %}
-            <div class="edit-delete-container">
-                <a href="{% url 'edit_post' post.pk %}" class="btn btn-success">Edit</a>
-                <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger">Delete</a>   
+            <div class="edit-delete-container mb-4">
+                <a href="{% url 'edit_post' post.pk %}" class="btn btn-outline-dark btn-sm">Edit</a>
+                <a href="{% url 'delete_post' post.pk %}" class="btn btn-outline-dark btn-sm">Delete</a>   
             </div>
         {% endif %}
 
         <!-- Post Timestamps -->
         <hr>
-        <div class="post-timestamps">
+        <div class="post-timestamps text-muted">
             <p>Created at: {{ post.created_at }}</p>
-            <p>Updated at: {{ post.updated_at }}</p>
+            {% if post.updated_at %}
+                <p>Updated at: {{ post.updated_at }}</p>
+            {% endif %}
+            
         </div>
 
         <!-- Comments Section -->
-        <div class="comments-section">
-            <h5>Comments:</h5>
+        <div class="comments-section mt-3">
+            <h5>Comments:</h5> <span class="">{{ comments.count }}</span> Comments
                 <div class="comments-list">
                     {% for comment in comments %}
-                        <div class="comment">
+                        <div class="comment mb-3">
                             <p><strong>{{ comment.author.username }}:</strong> {{ comment.content }}</p>
                             <hr>
                         </div>
                     {% empty %}
-                        <p>No comments yet.</p>
+                        <p class="ms-3">No comments yet.</p>
                     {% endfor %}
                 </div>
         </div>
 
         <!-- Comment Form -->
-         <span>{{ comments.count }}</span> Comments
-        <div class="comment-form">
-            <h6>Add a comment:</h6>
+         
+        <div class="comment-form">      
+            <h6 class="mt-3">Add a comment:</h6>
                 <form method="post" action="{% url 'post_detail' post.pk %}">
                     {% csrf_token %}
                         <div class="form-group">
@@ -55,9 +58,9 @@
                         </div>
                     
                     {% if request.user.is_authenticated %}
-                        <button type="submit" class="btn btn-secondary">Post</button>
+                        <button type="submit" class="btn btn-secondary mt-3 ms-2">Post</button>
                     {% else %}
-                        <a href="{% url 'signup' %}?next={% url 'post_detail' post.pk %}" class="btn btn-secondary">Post</a>
+                        <a href="{% url 'signup' %}?next={% url 'post_detail' post.pk %}" class="btn btn-secondary mt-3 ms-2">Post</a>
                         {% comment "" %}next should redirect to the post trying to comment but not working ,idk why{% endcomment %}
                     {% endif %}
                 </form>
