@@ -1,0 +1,28 @@
+{% extends 'posts/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Change Password{% endblock title %}
+{% block content %}
+    <div class="container mt-4 shadow sm p-5 w-50">
+        <form method="post">
+            {% csrf_token %}
+            <h5>Change Password</h5>
+            <div class="w-50 mb-3">
+                <label for="{{form.old_password.id_for_label }}">Current Password</label>
+                {{ form.old_password|attr:"class:form-control"}}
+            </div>
+            
+            <div class="w-50 mb-3">
+                <label for="{{form.new_password1.id_for_label }}">New Password</label>
+                {{ form.new_password1|attr:"class:form-control"}}
+            </div>
+            <div class="w-50 mb-3">
+                <label for="{{form.new_password2.id_for_label }}">Confirm New Password</label>
+                {{ form.new_password2|attr:"class:form-control"}}
+            </div>
+
+            <button type="submit" class="btn btn-dark mt-3 mb-2">Save</button>
+            <a href="{% url "dashboard" %}" class="btn btn-dark mt-2 ms-2">Cancel</a>
+            
+        </form>
+    </div>
+{% endblock content %}

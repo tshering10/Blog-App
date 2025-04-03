@@ -4,6 +4,8 @@ from posts.forms import PostForm, CommentForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 def home(request):
     posts = Post.objects.all().order_by('-pk')
@@ -88,3 +90,15 @@ def like_view(request, pk):
     if not Like.objects.filter(post=post, author=request.user).exists():
         Like.objects.create(post=post, author=request.user)
     return redirect('post_detail', pk=post.pk)
+
+def change_password_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, "Password changed successfully!")
+            return redirect('dashboard')
+    else:
+        form = PasswordChangeForm(user = request.user) 
+    return render(request, "posts/changepass.html", {'form': form})

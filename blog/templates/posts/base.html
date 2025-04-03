@@ -39,6 +39,9 @@
                   Accounts
                 </a>
                 <ul class="dropdown-menu">
+                  <li class="nav-item px-3 px-lg-0 py-1 py-lg-2">
+                    <a class="nav-link active" href="{% url "change_password" %}">Profile</a>
+                  </li>
                   <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <li><button type="submit" class="dropdown-item " >Logout</button></li>
