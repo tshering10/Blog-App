@@ -1,23 +1,32 @@
 {% extends 'posts/base.html' %}
 {% block title %}My Post{% endblock title %}
 {% block content %}
-    <div class="my-posts">
-        <h4>My Posts</h4>
+    <div class="container mt-5">
+        <h4 class="mb-4">My Posts</h4>
+        
         {% if request.user.is_authenticated %}
             {% if userPosts %}
-                {% for post in userPosts %}
-                    <div class="posts">
-                        <a class="text-decoration-none text-dark" href="{% url 'post_detail' post.pk %}">
-                            <strong>{{ post.title }} | {{ post.author.username }}</strong>
-                        </a>
-                        <p>{{ post.content|slice:":30" }}... <a href="{% url 'post_detail' post.pk %}">Read More</a></p>
-                    </div>
-                {% endfor %}
+                <div class="col">
+                    {% for post in userPosts %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm ">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{% url 'post_detail' post.pk %}" class="text-decoration-none text-dark">
+                                            <strong>{{ post.title }} | {{ post.author.username }}</strong>
+                                        </a>
+                                    </h5>
+                                    <p class="card-text">{{ post.content|slice:":30" }}... <a href="{% url 'post_detail' post.pk %}">Read More</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             {% else %}
-                <p>You haven't created any posts yet.</p>
+                <p class="text-center">You haven't created any posts yet.</p>
             {% endif %}
         {% else %}
-            <p>You must be logged in to view your posts.</p>
+            <p class="text-center">You must be logged in to view your posts.</p>
         {% endif %}
     </div>
 {% endblock content %}
