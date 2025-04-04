@@ -5,7 +5,7 @@
     <div class="container mt-5 border rounded shadow-sm w-50">
         
         <div class="post-create">
-            <form method='post w-50 '>
+            <form method='post'>
                 {% csrf_token %}
                 <h5 class="mt-3 mb-3 text-center">Create post</h5>
                 <div class=" form-group mb-3">
@@ -18,10 +18,13 @@
                     {{ form.content|attr:"class:form-control" }}
                 </div>
         
+                
                 <div class="save-btn d-flex justify-content-center align-items-center mb-3">
                     <button type="submit" class="btn btn-success">Save</button>
-                    <a href="{% url "dashboard" %}" class="btn btn-secondary ms-2 text-white">Cancel</a>
+                    <a href="{% url "dashboard"  %}" class="btn btn-secondary ms-2 text-white">Cancel</a>
                 </div>
+                    
+                
             </form>
         </div>
     </div>
